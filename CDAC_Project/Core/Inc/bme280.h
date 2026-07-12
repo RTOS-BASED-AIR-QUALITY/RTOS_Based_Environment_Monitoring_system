@@ -35,7 +35,10 @@ typedef struct
 
 } BME280_Data;
 
-
+// Read Chip ID //
+uint8_t BME280_CheckChipID(I2C_HandleTypeDef *hi2c);
+HAL_StatusTypeDef BME280_StartTemp(I2C_HandleTypeDef *hi2c); //  config register to read temp
+uint32_t BME280_ReadRawTemp(I2C_HandleTypeDef *hi2c);        // read Raw temp.
 
 
 
