@@ -40,6 +40,14 @@ uint8_t BME280_CheckChipID(I2C_HandleTypeDef *hi2c);
 HAL_StatusTypeDef BME280_StartTemp(I2C_HandleTypeDef *hi2c); //  config register to read temp
 uint32_t BME280_ReadRawTemp(I2C_HandleTypeDef *hi2c);        // read Raw temp.
 
+HAL_StatusTypeDef BME280_ReadTempCalibration(I2C_HandleTypeDef *hi2c);  // read value after calibration
+float BME280_GetTemperature(I2C_HandleTypeDef *hi2c);        // convert calibreted value in temp using formulae
+
+// humidity functions
+HAL_StatusTypeDef BME280_StartHumidity(I2C_HandleTypeDef *hi2c);
+uint16_t BME280_ReadRawHumidity(I2C_HandleTypeDef *hi2c);
+float BME280_GetHumidity(I2C_HandleTypeDef *hi2c);
+HAL_StatusTypeDef BME280_ReadHumidityCalibration(I2C_HandleTypeDef *hi2c);
 
 
 
