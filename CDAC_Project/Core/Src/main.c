@@ -27,7 +27,7 @@
 #include <inttypes.h>
 
 #include"semphr.h"
-
+#include"bme280.h"
 
 
 /* USER CODE END Includes */
@@ -114,6 +114,36 @@ void vBlinkLedTask(void* pvParam)
 	vTaskDelete(NULL);
 }
 
+//BME280 task
+void vBMERead(void* pvParam)
+{
+	BME280_Data readBME;
+	uint8_t bme_id;
+
+	bme_id=BME280_CheckChipID(&hi2c1);
+	if(bme_id != 0x60)
+		Error_Handler();
+
+	BME280_StartTemp(&hi2c1);
+	BME280_StartHumidity(&hi2c1);
+
+	BME280_ReadTempCalibration(&hi2c1);
+	BME280_ReadHumidityCalibration(&hi2c1);
+	while(1)
+	{
+		readBME.Temp = BME280_GetTemperature(&hi2c1);
+		readBME.Humidity = BME280_GetTemperature(&hi2c1);
+
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		SensorData.BMEdata.Temp = readBME.Temp;
+		SensorData.BMEdata.Humidity = readBME.Humidity;
+		xSemaphoreGive(xSensorMutex);
+
+		vTaskDelay(3000);
+	}
+	vTaskDelete(NULL);
+}
+
 
 /* USER CODE END 0 */
 
@@ -193,8 +223,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
 
   xTaskCreate(vBlinkLedTask, "LED Blink", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+  
+  xTaskCreate(vBMERead, "BME Task", 256, NULL, 5, NULL);
 
-//  xTaskCreate(PMS5003Task, "PMS5003 Sensor", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
+
 
 
   /* USER CODE END RTOS_THREADS */

@@ -1,7 +1,6 @@
 /*
  * BMP.c
  *
- *  Created on: 27-Jul-2026
  *      Author: sunbeam
  */
 
