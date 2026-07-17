@@ -1,6 +1,5 @@
 /*
  * BMP.c
- *
  *      Author: sunbeam
  */
 

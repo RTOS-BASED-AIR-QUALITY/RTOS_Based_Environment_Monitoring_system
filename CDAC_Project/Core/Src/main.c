@@ -224,7 +224,7 @@ int main(void)
 
   xTaskCreate(vBlinkLedTask, "LED Blink", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
   
-  xTaskCreate(vBMERead, "BME Task", 256, NULL, 5, NULL);
+  xTaskCreate(vBMERead, "BME Task", 512, NULL, 5, NULL);
 
 
 
