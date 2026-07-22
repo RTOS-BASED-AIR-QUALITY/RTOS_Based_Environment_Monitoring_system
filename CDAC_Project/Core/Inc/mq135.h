@@ -16,6 +16,7 @@ typedef struct MQ135_Data
 	 float sensorResistace_ratio;
 } MQ135_Data;
 
+float MQ135calculateRS(uint32_t adc);
 MQ135_Data ADCRead();
 
 #endif /* INC_MQ135_H_ */

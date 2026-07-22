@@ -8,6 +8,16 @@
 #include <mq135.h>
 extern ADC_HandleTypeDef hadc1;
 
+
+float MQ135calculateRS(uint32_t adc_count)
+{
+	float Vout;
+
+	Vout = ((float)adc_count * VREF) / ADC_MAX;
+
+	return (RL * (VC - Vout)) / Vout;
+}
+
 MQ135_Data ADCRead()
 {
 	uint32_t ADC_sum = 0, i;
