@@ -1,8 +1,6 @@
 /*
  * ADC_read.c
  *
- *  Created on: 05-Jul-2026
- *      Author: Dhiraj
  */
 
 #include <mq135.h>

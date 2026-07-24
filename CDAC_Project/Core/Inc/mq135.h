@@ -1,7 +1,6 @@
 /*
  * ADC_read.h
  *
- *  Created on: 22-Jul-2026
  *      Author: sunbeam
  */
 
