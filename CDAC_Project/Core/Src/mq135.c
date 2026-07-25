@@ -3,6 +3,8 @@
  *
  */
 
+
+//implemented with rtos
 #include <mq135.h>
 extern ADC_HandleTypeDef hadc1;
 

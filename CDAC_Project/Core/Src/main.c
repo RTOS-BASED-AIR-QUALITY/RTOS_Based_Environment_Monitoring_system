@@ -28,6 +28,7 @@
 
 #include"semphr.h"
 #include"bme280.h"
+#include"mq135.h"
 
 
 /* USER CODE END Includes */
@@ -144,6 +145,81 @@ void vBMERead(void* pvParam)
 	vTaskDelete(NULL);
 }
 
+// MQ135 Task
+void vMQ135Read(void* pvParam)
+{
+	MQ135_Data readMQ135;
+//	int len;
+//	char str[80];
+
+
+	while(1)
+	{
+		readMQ135 = ADCRead();
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		SensorData.mqRead = readMQ135;
+		xSemaphoreGive(xSensorMutex);
+
+		if (readMQ135.ADC_val < 2500)
+		{
+			xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+			SensorData.MQ135_data = "GOOD";
+			xSemaphoreGive(xSensorMutex);
+		}
+		if(readMQ135.ADC_val> 2500 && readMQ135.ADC_val < 3200)
+		{
+			xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+			SensorData.MQ135_data = "MODERATE";
+			xSemaphoreGive(xSensorMutex);
+		}
+		else
+		{
+			xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+			SensorData.MQ135_data = "BAD";
+			xSemaphoreGive(xSensorMutex);
+		}
+
+//		len = sprintf(str, "ADc Value = %d, res value = %.1f\r\n", readMQ135.ADC_val, readMQ135.sensorResistace_ratio);
+//		HAL_UART_Transmit(&huart2, (uint8_t*)str, len, HAL_MAX_DELAY);
+
+		xTaskNotifyGive(xBuzzerTaskHandle);
+
+		vTaskDelay(6000);
+	}
+	vTaskDelete(NULL);
+}
+
+//Buzzer Task
+void BuzzerTrigg(void* pvParam)
+{
+	while(1)
+	{
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+		MQ135_Data data;
+
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		data = SensorData.mqRead;
+		xSemaphoreGive(xSensorMutex);
+
+		if(data.ADC_val > 1800)
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+			SensorData.alarmState = 1;
+		}
+		else
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_13, GPIO_PIN_RESET);
+			SensorData.alarmState = 0;
+		}
+
+		vTaskDelay(100);
+	}
+	vTaskDelete(NULL);
+}
+
 
 /* USER CODE END 0 */
 
@@ -225,7 +301,10 @@ int main(void)
   xTaskCreate(vBlinkLedTask, "LED Blink", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
   
   xTaskCreate(vBMERead, "BME Task", 512, NULL, 5, NULL);
-
+  
+  xTaskCreate(vMQ135Read, "MQ135 reading", 256, NULL, 4, NULL);
+  
+  xTaskCreate(BuzzerTrigg, "Buzzer task", 256, NULL, 6, &xBuzzerTaskHandle);
 
 
 
