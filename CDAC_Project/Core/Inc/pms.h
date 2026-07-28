@@ -1,8 +1,7 @@
 /*
  * pms.h
  *
- *  Created on: 07-Aug-2026
- *      Author: sunbeam
+ *      Author: 
  */
 
 #ifndef INC_PMS_H_
@@ -26,11 +25,9 @@ typedef struct
 extern PMS5003_Data rxData;
 
 void PMS5003_Start(void);
-uint16_t S5003_Checksum(void);
-void PMS5003_ProcessFrame(void);
 
 
-//HAL_StatusTypeDef PMS5003_Read(PMS5003_Data *data);
+
 
 
 #endif /* INC_PMS_H_ */
