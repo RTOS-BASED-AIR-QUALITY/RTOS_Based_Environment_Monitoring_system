@@ -19,6 +19,40 @@ uint8_t rxBuffer[30];
 PMS5003_Data rxData;
 
 
+uint16_t PMS5003_Checksum(void)
+{
+	uint16_t sum = 0;
+
+	sum += PMS5003_HEADER1;
+	sum += PMS5003_HEADER2;
+
+	for(uint8_t i=0; i<28; i++)
+	{
+		sum += rxBuffer[i];
+	}
+	return sum;
+}
+
+void PMS5003_ProcessFrame(void)
+{
+	uint16_t rxChecksum;
+	uint16_t calculatedChecksum;
+
+	calculatedChecksum = PMS5003_Checksum();
+	rxChecksum = ((uint16_t)rxBuffer[28] << 8) | rxBuffer[29];
+
+	if(rxChecksum != calculatedChecksum)
+	{
+		return ;
+	}
+
+	rxData.pm1_0 = ((uint16_t)rxBuffer[2] << 8) | rxBuffer[3];
+	rxData.pm2_5 = ((uint16_t)rxBuffer[4] << 8) | rxBuffer[5];
+	rxData.pm10  = ((uint16_t)rxBuffer[6] << 8) | rxBuffer[7];
+}
+
+
+
 void PMS5003_Start(void)
 {
 	HAL_UART_Receive_IT(&huart1, &rxByte, 1);

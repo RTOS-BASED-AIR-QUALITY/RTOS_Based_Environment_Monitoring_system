@@ -25,6 +25,7 @@ typedef struct
 extern PMS5003_Data rxData;
 
 void PMS5003_Start(void);
+uint16_t S5003_Checksum(void);
 void PMS5003_ProcessFrame(void);
 
 
