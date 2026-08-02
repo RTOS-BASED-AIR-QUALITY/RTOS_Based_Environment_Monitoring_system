@@ -29,6 +29,7 @@
 #include"semphr.h"
 #include"bme280.h"
 #include"mq135.h"
+#include"pms.h"
 
 
 /* USER CODE END Includes */
@@ -220,6 +221,54 @@ void BuzzerTrigg(void* pvParam)
 	vTaskDelete(NULL);
 }
 
+//pms5003 Task
+void PMS5003Task(void* pvParam)
+{
+	PMS5003_Start();
+	while(1)
+	{
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		SensorData.pm2_5Reading = rxData.pm2_5;
+		xSemaphoreGive(xSensorMutex);
+
+		vTaskDelay(3000);
+	}
+	vTaskDelete(NULL);
+}
+
+
+// UART Display Task
+void UARTSend(void* pvParam)
+{
+	SensorData_t localData;
+
+	char str[128];
+	int len;
+
+	while(1)
+	{
+
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		localData = SensorData;
+		xSemaphoreGive(xSensorMutex);
+
+		len = sprintf(str,
+				" Temperature = %.1f \r\n Humidity = %.1f \r\n MQ135 value = %s \n\r Alarm State = %d\n\r PM2.5 value = %d\n\r\n",
+				localData.BMEdata.Temp,
+				localData.BMEdata.Humidity,
+				localData.MQ135_data,
+				localData.alarmState,
+				localData.pm2_5Reading);
+
+		HAL_UART_Transmit(&huart2, (uint8_t*)str, len, HAL_MAX_DELAY);
+
+		vTaskDelay(5000);
+
+	}
+	vTaskDelete(NULL);
+}
+
+
 
 /* USER CODE END 0 */
 
@@ -305,6 +354,10 @@ int main(void)
   xTaskCreate(vMQ135Read, "MQ135 reading", 256, NULL, 4, NULL);
   
   xTaskCreate(BuzzerTrigg, "Buzzer task", 256, NULL, 6, &xBuzzerTaskHandle);
+  
+  xTaskCreate(PMS5003Task, "PMS5003 Sensor", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
+  
+  xTaskCreate(UARTSend, "UART Display", 512, NULL, 2, NULL);
 
 
 
