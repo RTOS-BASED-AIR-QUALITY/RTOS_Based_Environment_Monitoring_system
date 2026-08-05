@@ -72,6 +72,4 @@ void loop() {
   //   "alarm":1
   // };
 
-  
-  delay(5000);
 }
