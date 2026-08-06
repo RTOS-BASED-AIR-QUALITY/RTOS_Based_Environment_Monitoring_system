@@ -62,6 +62,8 @@ void loop() {
     publisher.print(data);
     publisher .endMessage();
   }
+  
+  // integrated with server through MQTT
 
   // JSON Data 
   // {
