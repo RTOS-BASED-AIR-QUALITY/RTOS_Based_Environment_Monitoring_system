@@ -9,11 +9,13 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 @app.route('/')
 def index():
+    return render_template('dashboard.html')
 
 def on_message(client, userdata, message):
     payload = message.payload.decode()
     data = json.loads(payload)
     print(data)
+    socketio.emit("sensor_update",data)
 
 subscriber = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 

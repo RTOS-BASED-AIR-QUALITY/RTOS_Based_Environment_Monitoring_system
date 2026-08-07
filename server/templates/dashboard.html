@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Air-Sense Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#eef3f8;
+}
+
+header{
+    background:#1565C0;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.container{
+
+    width:90%;
+    margin:auto;
+    margin-top:30px;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+}
+
+.card{
+
+    background:white;
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0px 5px 15px rgba(0,0,0,0.2);
+
+    transition:0.3s;
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+}
+
+.icon{
+
+    font-size:45px;
+
+    text-align:center;
+
+    margin-bottom:15px;
+}
+
+.title{
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#444;
+
+    margin-bottom:20px;
+}
+
+.value{
+
+    text-align:center;
+
+    font-size:42px;
+
+    color:#1565C0;
+
+    font-weight:bold;
+}
+
+.unit{
+
+    text-align:center;
+
+    margin-top:8px;
+
+    color:gray;
+
+    font-size:18px;
+}
+
+.status{
+
+    text-align:center;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    color:green;
+}
+
+.footer{
+
+    margin-top:40px;
+
+    text-align:center;
+
+    color:#777;
+
+    font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+Air-Sense Environmental Monitoring System
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<div class="icon">🌡️</div>
+
+<div class="title">Temperature</div>
+
+<div class="value" id="temperature">
+
+29.5
+
+</div>
+
+<div class="unit">
+
+°C
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="icon">💧</div>
+
+<div class="title">Humidity</div>
+
+<div class="value" id="humidity">
+
+61
+
+</div>
+
+<div class="unit">
+
+%
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="icon">🌫️</div>
+
+<div class="title">Air Quality</div>
+
+<div class="value" id="airquality">
+
+Good
+
+</div>
+
+<div class="unit">
+
+MQ135
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="icon">🏭</div>
+
+<div class="title">PM2.5</div>
+
+<div class="value" id="pm25">
+
+18
+
+</div>
+
+<div class="unit">
+
+µg/m³
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="icon">🔔</div>
+
+<div class="title">Buzzer</div>
+
+<div class="status" id="buzzer">
+
+OFF
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+Last Updated :
+<span id="time">
+
+--:--:--
+
+</span>
+
+</div>
+
+<script>
+
+function updateDashboard(data)
+{
+
+    document.getElementById("temperature").innerHTML=data.temperature;
+
+    document.getElementById("humidity").innerHTML=data.humidity;
+
+    document.getElementById("airquality").innerHTML=data.airquality;
+
+    document.getElementById("pm25").innerHTML=data.pm25;
+
+    if(data.alarm==1)
+    {
+        document.getElementById("buzzer").innerHTML="ON";
+        document.getElementById("buzzer").style.color="red";
+    }
+    else
+    {
+        document.getElementById("buzzer").innerHTML="OFF";
+        document.getElementById("buzzer").style.color="green";
+    }
+
+    document.getElementById("time").innerHTML=new Date().toLocaleTimeString();
+
+}
+</script>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+
+function updateDashboard(data)
+{
+    console.log("Updating dashboard with:", data);
+
+    document.getElementById("temperature").innerHTML =
+        data.temperature;
+
+    document.getElementById("humidity").innerHTML =
+        data.humidity;
+
+    document.getElementById("airquality").innerHTML =
+        data.airquality;
+
+    document.getElementById("pm25").innerHTML =
+        data.pm25;
+
+    if (data.alarm == 1)
+    {
+        document.getElementById("buzzer").innerHTML = "ON";
+        document.getElementById("buzzer").style.color = "red";
+    }
+    else
+    {
+        document.getElementById("buzzer").innerHTML = "OFF";
+        document.getElementById("buzzer").style.color = "green";
+    }
+
+    document.getElementById("time").innerHTML =
+        new Date().toLocaleTimeString();
+}
+
+
+const socket = io();
+
+console.log("Socket.IO started");
+
+
+socket.on("connect", function()
+{
+    console.log("Connected to Flask-SocketIO");
+});
+
+
+socket.on("disconnect", function()
+{
+    console.log("Disconnected from Flask-SocketIO");
+});
+
+
+socket.on("sensor_update", function(data)
+{
+    console.log("Received sensor data:", data);
+
+    updateDashboard(data);
+});
+
+</script>
+
+</body>
+</html>
+
+
+</body>
+
+</html>
