@@ -268,6 +268,36 @@ void UARTSend(void* pvParam)
 	vTaskDelete(NULL);
 }
 
+//JSON Sent to ESP32 Module
+void JSON_UARTSend(void* pvParam)
+{
+	SensorData_t JSONData;
+
+	char str[128];
+	int len;
+
+	while(1)
+	{
+		xSemaphoreTake(xSensorMutex, portMAX_DELAY);
+		JSONData = SensorData;
+		xSemaphoreGive(xSensorMutex);
+
+		len = sprintf(str,
+				"{\"temperature\":%.1f, \"humidity\":%.1f, \"airquality\":%s, \"pm2.5\":%d, \"alarm\":%d}\n",
+				JSONData.BMEdata.Temp,
+				JSONData.BMEdata.Humidity,
+				JSONData.MQ135_data,
+				JSONData.pm2_5Reading,
+				JSONData.alarmState);
+
+		HAL_UART_Transmit(&huart3, (uint8_t*)str, len, HAL_MAX_DELAY);
+
+		vTaskDelay(5000);
+	}
+	vTaskDelete(NULL);
+}
+
+
 
 
 /* USER CODE END 0 */
@@ -358,6 +388,8 @@ int main(void)
   xTaskCreate(PMS5003Task, "PMS5003 Sensor", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
   
   xTaskCreate(UARTSend, "UART Display", 512, NULL, 2, NULL);
+  
+  xTaskCreate(JSON_UARTSend, "JSON sent to esp32", 512, NULL, 2, NULL);
 
 
 
