@@ -203,15 +203,13 @@ void BuzzerTrigg(void* pvParam)
 		data = SensorData.mqRead;
 		xSemaphoreGive(xSensorMutex);
 
-		if(data.ADC_val > 1800)
+		if(data.ADC_val > 3200)
 		{
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 			SensorData.alarmState = 1;
 		}
 		else
 		{
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_13, GPIO_PIN_RESET);
 			SensorData.alarmState = 0;
 		}

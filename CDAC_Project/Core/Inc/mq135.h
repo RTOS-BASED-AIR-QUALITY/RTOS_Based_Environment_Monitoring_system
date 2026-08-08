@@ -1,8 +1,3 @@
-/*
- * ADC_read.h
- *
- *      Author: sunbeam
- */
 
 #ifndef INC_MQ135_H_
 #define INC_MQ135_H_

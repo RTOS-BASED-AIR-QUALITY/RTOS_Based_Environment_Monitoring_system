@@ -1,8 +1,3 @@
-/*
- * ADC_read.c
- *
- */
-
 
 //implemented with rtos
 #include <mq135.h>
