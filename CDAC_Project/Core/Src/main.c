@@ -383,7 +383,7 @@ int main(void)
   
   xTaskCreate(BuzzerTrigg, "Buzzer task", 256, NULL, 6, &xBuzzerTaskHandle);
   
-  xTaskCreate(PMS5003Task, "PMS5003 Sensor", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
+  xTaskCreate(PMS5003Task, "PMS5003 Sensor", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
   
   xTaskCreate(UARTSend, "UART Display", 512, NULL, 2, NULL);
   

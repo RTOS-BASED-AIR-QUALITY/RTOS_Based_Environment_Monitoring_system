@@ -1,7 +1,7 @@
+//implemended with RTOS and working
+
 #include "pms.h"
 
-
-//implemended with RToS
 typedef enum
 {
     HEADER_1,

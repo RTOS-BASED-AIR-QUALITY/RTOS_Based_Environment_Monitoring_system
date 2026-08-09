@@ -1,8 +1,3 @@
-/*
- * pms.h
- *
- *      Author: 
- */
 
 #ifndef INC_PMS_H_
 #define INC_PMS_H_
