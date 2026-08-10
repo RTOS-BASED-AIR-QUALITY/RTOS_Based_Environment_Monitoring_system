@@ -65,13 +65,4 @@ void loop() {
   
   // integrated with server through MQTT
 
-  // JSON Data 
-  // {
-  //   "temperature": 28.3,
-  //   "humidity":65.3,
-  //   "airquality":"good",
-  //   "pm2.5":29,
-  //   "alarm":1
-  // };
-
 }

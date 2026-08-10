@@ -27,6 +27,8 @@
 #include <inttypes.h>
 
 #include"semphr.h"
+
+// All Sensors libraries
 #include"bme280.h"
 #include"mq135.h"
 #include"pms.h"
@@ -388,8 +390,6 @@ int main(void)
   xTaskCreate(UARTSend, "UART Display", 512, NULL, 2, NULL);
   
   xTaskCreate(JSON_UARTSend, "JSON sent to esp32", 512, NULL, 2, NULL);
-
-
 
   /* USER CODE END RTOS_THREADS */
 
