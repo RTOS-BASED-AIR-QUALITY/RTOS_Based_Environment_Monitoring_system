@@ -297,21 +297,21 @@ Primary responsibilities:
 
 Primary responsibilities:
 
-- MQ135 driver
-- ADC-based acquisition
-- Air-quality calculations
-- MQ135 FreeRTOS integration
-- Alarm handling
+- PMS5003 drive
+- UART reception
+- Frame parsing
+- Checksum validation
+- PMS5003 FreeRTOS integration
 
 ### Member 3 — Rajashri Sanjay Patil
 
 Primary responsibilities:
 
-- PMS5003 driver
-- UART reception
-- Frame parsing
-- Checksum validation
-- PMS5003 FreeRTOS integration
+- MQ135 drive
+- ADC-based acquisition
+- Air-quality calculations
+- MQ135 FreeRTOS integration
+- Alarm handling
 
 ### Member 4 — MD Akif Amaan
 
